@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="dark" data-dark-theme="dark_dimmed">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+    <title>Document</title>
+    <style>
+        #chat {
+            max-height: 500px;
+            min-width: 500px;
+            height: 300px;
+            background-color: blue;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-lg text-center">
+        <p class="f1 mt-5 text-center"> Chat ._. </p>
+        <div id="chat">
+
+        </div>
+        <div>
+            <input type="text" id="username" placeholder="username" class="form-control input-lg">
+        </div>
+        <div>
+            <input type="text" id="msg" class="form-control input-lg">
+        </div>
+        <button id="send" class="btn mt-4">Send</button>
+    </div>
+
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <script>
+
+        const socket = io('http://localhost:8081')
+
+        document.getElementById('send').addEventListener('click', () => {
+
+            const msg_field = document.getElementById('msg')
+            
+            const name = document.getElementById('username').value
+            const msg = msg_field.value
+
+            socket.emit('msg', { msg, name} )
+
+        }, false)
+
+        socket.on('show_msg', (data) => {
+            const chat = document.getElementById('chat')
+            let p = document.createElement('p')
+
+            p.innerHTML = `${data.msg.name}: ${data.msg.msg} - ${data.date}`
+            chat.appendChild(p)
+        })
+
+    </script>
+</body>
+</html>
